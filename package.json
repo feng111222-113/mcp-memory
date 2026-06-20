@@ -1,0 +1,35 @@
+{
+  "name": "@mimochamber/memory-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-session persistent memory server for OpenCode/OpenChamber. Markdown files + SQLite FTS5 search.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mimochamber/mcp-memory"
+  },
+  "bin": {
+    "mcp-memory": "./bin/mcp-memory.js",
+    "memory-server": "./bin/mcp-memory.js"
+  },
+  "main": "./src/index.ts",
+  "files": [
+    "src/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2"
+  },
+  "devDependencies": {
+    "bun-types": "^1.2.0"
+  }
+}
