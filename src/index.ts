@@ -480,6 +480,7 @@ async function pollCompaction() {
               }
             }
           } catch (err) {
+            pollFailures++;
             if (err instanceof TypeError && (err as Error).message?.includes("fetch")) {
               console.error(`[mcp-memory] compaction poller: network error (is OpenCode running?)`);
             } else {
