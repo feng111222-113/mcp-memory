@@ -9,6 +9,11 @@
  * 选 OR 不选 AND：AND 要求每个 token 都命中，在小语料库上
  * 极易返回 0 结果。OR 让 BM25 按匹配多少和稀缺程度排序。
  *
+ * 已知限制：token 提取用 [\p{L}\p{N}_]+ 匹配，会丢弃标点符号。
+ * 搜索 "C#" 或 "useEffect cleanup" 时 # 和标点被忽略，
+ * 精确匹配可能意外丢失。当前不影响主要用例（高召回 BM25 足以应对），
+ * 如需精确标点匹配需改为保留原始输入中的指定符号。
+ *
  * 来源：MiMo Code packages/opencode/src/memory/fts-query.ts
  * 许可：MIT
  */

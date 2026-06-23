@@ -20,7 +20,8 @@ function callTool(name, args) {
 async function run() {
   const child = spawn("bun", ["run", serverPath], {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, MCP_MEMORY_POLL_INTERVAL: "0" },
+    env: { ...process.env, MCP_MEMORY_POLL_INTERVAL: "0", MCP_MEMORY_ROOT: ".test-memory" },
+    shell: process.platform === "win32",
   });
 
   let output = "";

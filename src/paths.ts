@@ -5,10 +5,12 @@ import type { MemoryLocator, MemoryType, Scope } from "./types";
 /**
  * Memory 目录中 .md 文件的路径匹配正则。
  *
- * /memory/(global|projects|sessions)(?:/([^/]+))?/(.+)\.md$
- *         scope             scope_id         key
+ * /(global|projects|sessions)(?:/([^/]+))?/(.+)\.md$
+ *   scope             scope_id         key
+ *
+ * 路径例如 ~/.mcp-memory/sessions/<id>/note-xxx.md
  */
-const MEMORY_PATH_RE = /\/memory\/(global|projects|sessions)(?:\/([^/]+))?\/(.+)\.md$/;
+const MEMORY_PATH_RE = /\/(global|projects|sessions)(?:\/([^/]+))?\/(.+)\.md$/;
 
 /** 类型检测模式：根据文件名前缀推断 type */
 const TYPE_PATTERNS: Array<{ match: RegExp; type: MemoryType }> = [
@@ -16,7 +18,9 @@ const TYPE_PATTERNS: Array<{ match: RegExp; type: MemoryType }> = [
   { match: /^memory-/i, type: "memory" },
   { match: /^checkpoint$/, type: "checkpoint" },
   { match: /^checkpoint-/, type: "checkpoint" },
-  { match: /^compaction-/, type: "compaction" },
+  { match: /^compaction-/i, type: "compaction" },
+  { match: /^compactions$/i, type: "compaction" },
+  { match: /^notes$/i, type: "notes" },
   { match: /^tasks\/[^/]+\/progress$/, type: "progress" },
   { match: /^tasks\/[^/]+\/notes$/, type: "notes" },
 ];
@@ -48,6 +52,9 @@ function assertSafeComponent(value: string) {
     if (segment === "..") throw new Error(`buildPath: invalid path component: ${value}`);
   }
   if (value.startsWith("/")) throw new Error(`buildPath: invalid path component: ${value}`);
+  if (value.includes("\0")) throw new Error(`buildPath: null byte in path component: ${value}`);
+  if (/^[a-zA-Z]:[\\/]/.test(value) || value.startsWith("\\\\"))
+    throw new Error(`buildPath: absolute path in component: ${value}`);
 }
 
 export function buildPath(input: {
